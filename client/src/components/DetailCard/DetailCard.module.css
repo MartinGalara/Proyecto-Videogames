@@ -32,6 +32,8 @@
     position: relative;
     width: 1000px;
     height: 600px;
+    border-radius: 15px;
+    margin-bottom: 20px;
 }
 
 .algo{

@@ -10,6 +10,8 @@ const initialState = {
   videogame: {},
   genres: [],
   allVideogames: [],
+  currentPage: 1,
+  flag: false,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -45,7 +47,7 @@ const rootReducer = (state = initialState, action) => {
       }
 
     case "APPLY_FILTERS":
-      const allVideogames = state.allVideogames;
+      const allVideogames = [...state.allVideogames];
       let filtered =
         action.payload.genre === "All genres"
           ? allVideogames
@@ -108,6 +110,20 @@ const rootReducer = (state = initialState, action) => {
       return{
           ...state,
           videogames: filtered,
+      }
+
+    case "SET_PAGE":
+      return{
+        ...state,
+        currentPage: action.payload,
+      }
+
+    case "SET_FLAG":
+      let newFlag = false;
+      if(state.flag === false) newFlag = true;
+      return{
+        ...state,
+        flag: newFlag,
       }
     default:
       return state;

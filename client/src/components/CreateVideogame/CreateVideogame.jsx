@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getGenres, createVideogame } from "../../redux/actions";
+import { getGenres, createVideogame, setFlag } from "../../redux/actions";
 import { Link, useHistory } from "react-router-dom";
 import s from "./CreateVideogame.module.css";
 
@@ -15,12 +15,17 @@ function validate(input) {
   if (!input.platforms.length)
     errors.platforms = "Must select at least 1 platform";
   if (!input.genre.length) errors.genre = "Must select at least 1 genre";
+  if(!input.release_date) errors.release_date = "Must select a date"
   if(input.name){
-    allVideogames.map(el => {
-    const string1 = el.name
-    const string2 = input.name
-    if(string1 === string2) errors.name = "Game already exists";
+  /*
+  allVideogames.map(el => {
+  const string1 = el.name
+  const string2 = input.name
+  if(string1 === string2) errors.name = "Game already exists";
   })
+  */
+  const aux = (el) => el.name === input.name;
+  if(allVideogames.some(aux)) errors.name = "Game already exists"
 }
 return errors;
 }
@@ -53,7 +58,9 @@ return errors;
   }, [dispatch]);
 
   const handleSubmit = (e) => {
+    e.preventDefault()
     input.name = input.name.charAt(0).toUpperCase() + input.name.slice(1);
+    if(input.background_image === "") input.background_image = "https://bitsofco.de/content/images/2018/12/Screenshot-2018-12-16-at-21.06.29.png";
     dispatch(createVideogame(input));
     setInput({
       name: "",
@@ -65,6 +72,7 @@ return errors;
       genre: [],
     });
     history.push("/home");
+    dispatch(setFlag())
   };
 
   const handleInputChange = function (e) {
@@ -150,6 +158,7 @@ return errors;
           onChange={handleInputChange}
         />
         <br></br>
+        {errors.release_date && <p className={s.errors}>{errors.release_date}</p>}
         </div>
 
         <div className={s.el}>

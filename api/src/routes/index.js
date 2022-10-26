@@ -194,7 +194,7 @@ router.post("/videogames", async (req, res) => {
   const { name, description, release_date, rating, platforms, genre, background_image} =
     req.body;
 
-  if ( !name || !description || !platforms || platforms.length === 0 || !genre || genre.length === 0
+  if ( !name || !description || platforms.length === 0 || genre.length === 0
   )
     return res.status(400).send("Faltan parametros");
 

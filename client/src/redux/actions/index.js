@@ -56,7 +56,6 @@ export function createVideogame(arg) {
         });
         alert("Videogame created!");
     } catch (error) {
-      console.log(error)
       alert(error.response.data)
     }
   };
@@ -110,5 +109,18 @@ export function applyFilters(payload){
   return{
     type: "APPLY_FILTERS",
     payload,
+  }
+}
+
+export function setPage(payload){
+  return{
+    type: "SET_PAGE",
+    payload,
+  }
+}
+
+export function setFlag(){
+  return{
+    type: "SET_FLAG"
   }
 }

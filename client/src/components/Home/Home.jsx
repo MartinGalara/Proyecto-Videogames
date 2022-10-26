@@ -7,6 +7,8 @@ import {
   getSomeVideogames,
   getGenres,
   applyFilters,
+  setPage,
+  setFlag,
 } from "../../redux/actions";
 import { Link } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
@@ -20,7 +22,8 @@ export default function Home() {
   const dispatch = useDispatch();
   const allVideogames = useSelector((state) => state.videogames);
   const allGenres = useSelector((state) => state.genres);
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = useSelector((state) => state.currentPage)
+  const flag2 = useSelector((state) => state.flag)
   const itemsPerPage = 15;
   const lastIndex = currentPage * itemsPerPage;
   const firstIndex = lastIndex - itemsPerPage;
@@ -31,19 +34,25 @@ export default function Home() {
     filter: "No filter",
     flag: false,
   })
-  
 
+  if(flag2 === true){
+    dispatch(getAllVideogames());
+    dispatch(setFlag())
+  }
+ 
   const paginado = (page) => {
-    setCurrentPage(page);
+    dispatch(setPage(page))
   };
 
   useEffect(() => {
+    if (allVideogames.length === 0) {
     dispatch(getAllVideogames());
     dispatch(getGenres());
-  }, [dispatch]);
+  }
+  }, [dispatch,allVideogames]);
 
   const searchHandler = (videogame) => {
-    setCurrentPage(1);
+    dispatch(setPage(1))
     dispatch(getSomeVideogames(videogame));
   };
 
@@ -63,13 +72,13 @@ export default function Home() {
 
   function handleRefresh(e) {
     e.preventDefault();
-    setCurrentPage(1);
+    dispatch(setPage(1))
     dispatch(getAllVideogames());
   }
 
   function handleFilters() {
     dispatch(applyFilters(filtrados));
-    setCurrentPage(1);
+    dispatch(setPage(1))
     if(filtrados.flag === true) setFiltrados({ ...filtrados, flag: false })
     else setFiltrados({ ...filtrados, flag: true })
   }
